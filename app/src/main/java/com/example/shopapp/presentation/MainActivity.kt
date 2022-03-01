@@ -16,11 +16,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        viewModel.getShopList().observe(this) {
+        viewModel.shopListLD.observe(this) {
             Log.i("pussy", it.toString())
+            viewModel.deleteShopItem(ShopItem("name 2", 2, true, 2))
+            viewModel.editShopItem(ShopItem("name 0", 0, true, 0))
         }
-        viewModel.deleteShopItem(ShopItem("name 2", 2, true, 2))
-        viewModel.editShopItem(ShopItem("name 0", 0, true, 0))
+
 
     }
 }

@@ -10,7 +10,7 @@ object ShopListRepositoryImpl: ShopListRepository {
 
     private val shopList = mutableListOf<ShopItem>()
 
-    private var mutableLiveData = MutableLiveData<List<ShopItem>>()
+    private var shopListLD = MutableLiveData<List<ShopItem>>()
 
     private var autoIncrementId = 0
 
@@ -22,8 +22,7 @@ object ShopListRepositoryImpl: ShopListRepository {
     }
 
     override fun getShopList(): LiveData<List<ShopItem>> {
-        mutableLiveData.value = shopList
-        return mutableLiveData
+        return shopListLD
     }
 
     override fun addShopItem(shopItem: ShopItem) {
@@ -31,6 +30,7 @@ object ShopListRepositoryImpl: ShopListRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateLD()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -40,10 +40,15 @@ object ShopListRepositoryImpl: ShopListRepository {
 
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateLD()
     }
 
     override fun getShopItemById(idShopItem: Int): ShopItem {
         return shopList.find { it.id == idShopItem } ?: throw RuntimeException("Element with id $shopList not found")
+    }
+
+    private fun updateLD() {
+        shopListLD.value = shopList.toList()
     }
 
 
