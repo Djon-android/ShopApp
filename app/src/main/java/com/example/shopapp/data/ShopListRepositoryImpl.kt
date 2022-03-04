@@ -16,14 +16,10 @@ object ShopListRepositoryImpl: ShopListRepository {
     private var autoIncrementId = 0
 
     init {
-        for (i in 0 until 100) {
+        for (i in 0 until 10) {
             val shopItem = ShopItem("name $i", i, Random.nextBoolean())
             addShopItem(shopItem)
         }
-    }
-
-    override fun getShopList(): LiveData<List<ShopItem>> {
-        return shopListLD
     }
 
     override fun addShopItem(shopItem: ShopItem) {
@@ -34,23 +30,35 @@ object ShopListRepositoryImpl: ShopListRepository {
         updateLD()
     }
 
-    override fun editShopItem(shopItem: ShopItem) {
-        deleteShopItem(getShopItemById(shopItem.id))
-        addShopItem(shopItem)
-    }
-
     override fun deleteShopItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
         updateLD()
     }
 
+
+    override fun editShopItem(shopItem: ShopItem) {
+//        deleteShopItem(getShopItemById(shopItem.id))
+//        addShopItem(shopItem)
+        val oldElement = getShopItemById(shopItem.id)
+        shopList.remove(oldElement)
+        addShopItem(shopItem)
+    }
+
+
+
     override fun getShopItemById(idShopItem: Int): ShopItem {
         return shopList.find { it.id == idShopItem } ?: throw RuntimeException("Element with id $shopList not found")
+    }
+
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLD
     }
 
     private fun updateLD() {
         shopListLD.value = shopList.toList()
     }
+
+
 
 
 }
