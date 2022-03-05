@@ -1,5 +1,6 @@
 package com.example.shopapp.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +19,7 @@ import com.google.android.material.textfield.TextInputLayout
 class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
+    private lateinit var onEditiningFinishedListener: OnEditiningFinishedListener
 
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
@@ -27,6 +29,16 @@ class ShopItemFragment : Fragment() {
 
     private var screenMode: String = MODE_UNKNOWN
     private var shopItemId: Int = ShopItem.UNDEFINED_ID
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditiningFinishedListener) {
+            onEditiningFinishedListener = context
+        } else {
+            throw java.lang.RuntimeException("Activity not realization interface OnEditingFinishedListener")
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +68,10 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun launchEditMode() {
-        viewModel.editShopItem.observe(viewLifecycleOwner, Observer {
+        viewModel.editShopItem.observe(viewLifecycleOwner) {
             etName.setText(it.name)
             etCount.setText(it.count.toString())
-        })
+        }
         viewModel.getShopItemById(shopItemId)
         buttonSave.setOnClickListener {
             val name = etName.text.toString()
@@ -77,23 +89,23 @@ class ShopItemFragment : Fragment() {
     }
 
     private fun setupObserveOnErrorAndSuccess() {
-        viewModel.errorInputName.observe(viewLifecycleOwner, Observer {
+        viewModel.errorInputName.observe(viewLifecycleOwner) {
             if (it) {
                 tilName.error = "Введите значение имени"
             } else {
                 tilName.error = null
             }
-        })
-        viewModel.errorInputCount.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.errorInputCount.observe(viewLifecycleOwner) {
             if (it) {
                 tilCount.error = "Введите значение количества"
             } else {
                 tilCount.error = null
             }
-        })
-        viewModel.successLiveData.observe(viewLifecycleOwner, Observer {
-            activity?.onBackPressed()
-        })
+        }
+        viewModel.successLiveData.observe(viewLifecycleOwner) {
+            onEditiningFinishedListener.onEditingFinished()
+        }
     }
 
     private fun addChangeTextListener() {
@@ -157,7 +169,9 @@ class ShopItemFragment : Fragment() {
         }
     }
 
-
+    interface OnEditiningFinishedListener {
+        fun onEditingFinished()
+    }
     companion object {
         private const val SCREEN_MODE = "extra_mode"
         private const val SHOP_ITEM_ID = "extra_shop_item_id"
