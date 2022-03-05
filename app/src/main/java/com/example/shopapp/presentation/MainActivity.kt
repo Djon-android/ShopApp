@@ -1,18 +1,19 @@
 package com.example.shopapp.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shopapp.R
-import com.example.shopapp.domain.ShopItem
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapterShopList: ShopListAdapter
+
+    private lateinit var buttonAddItem: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,8 +23,11 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopListLD.observe(this) {
             adapterShopList.submitList(it)
         }
-
-
+        buttonAddItem = findViewById(R.id.button_add_shop_item)
+        buttonAddItem.setOnClickListener {
+            val intent = ShopItemActivity.newIntentAddItem(this)
+            startActivity(intent)
+        }
     }
 
 
@@ -63,13 +67,14 @@ class MainActivity : AppCompatActivity() {
                     viewModel.deleteShopItem(shopItem)
                 }
             }
-        var itemTouchHelper = ItemTouchHelper(swipe)
+        val itemTouchHelper = ItemTouchHelper(swipe)
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     private fun setupClickListener() {
         adapterShopList.onShopItemClickListener = {
-            Log.i("pussy", it.toString())
+            val intent = ShopItemActivity.newIntentEditItem(this@MainActivity, it.id)
+            startActivity(intent)
         }
     }
 
