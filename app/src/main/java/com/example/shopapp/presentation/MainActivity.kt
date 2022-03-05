@@ -29,14 +29,22 @@ class MainActivity : AppCompatActivity() {
         }
         buttonAddItem = findViewById(R.id.button_add_shop_item)
         buttonAddItem.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (shopItemContainer != null) {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.shop_item_container, ShopItemFragment.newInstanceAddItem())
+                    .commit()
+            } else {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            }
         }
     }
 
     private fun setContentInContainer() {
         if (shopItemContainer != null) {
-
+            supportFragmentManager.beginTransaction()
+                .add(R.id.shop_item_container, ShopItemFragment.newInstanceAddItem())
+                .commit()
         }
     }
 
@@ -83,8 +91,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         adapterShopList.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEditItem(this@MainActivity, it.id)
-            startActivity(intent)
+            if (shopItemContainer != null) {
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.shop_item_container, ShopItemFragment.newInstanceEditItem(it.id))
+                    .commit()
+            } else {
+                val intent = ShopItemActivity.newIntentEditItem(this@MainActivity, it.id)
+                startActivity(intent)
+            }
         }
     }
 
