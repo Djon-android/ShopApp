@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditiningFinishedLi
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapterShopList: ShopListAdapter
-    private var shopItemContainer: FragmentContainerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +50,13 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditiningFinishedLi
     }
 
     private fun isOnePaneMode(): Boolean {
-        return shopItemContainer == null
+        return binding.shopItemContainer == null
     }
 
 
     private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.rv_shop_list)
         adapterShopList = ShopListAdapter()
-        with(recyclerView) {
+        with(binding.rvShopList) {
             adapter = adapterShopList
             recycledViewPool.setMaxRecycledViews(
                 ShopListAdapter.IS_ENABLED_VIEW_TYPE,
@@ -71,7 +69,7 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditiningFinishedLi
         }
         setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(recyclerView)
+        setupSwipeListener(binding.rvShopList)
     }
 
     private fun setupSwipeListener(recyclerView: RecyclerView) {

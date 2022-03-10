@@ -23,6 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:errorName="@{viewModel.errorInputName}"
             app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -30,6 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
+                android:text="@{viewModel.editShopItem.name}"
+                android:onTextChanged="@{(text, start, before, count) -> viewModel.resetErrorInputName()}"
                 android:inputType="textCapWords" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -41,6 +44,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="8dp"
+            app:errorCount="@{viewModel.errorInputCount}"
             app:layout_constraintBottom_toTopOf="@+id/button_save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/count"
+                android:text="@{String.valueOf(viewModel.editShopItem.count)}"
+                android:onTextChanged="@{(text, start, before, count) -> viewModel.resetErrorInputCount()}"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
