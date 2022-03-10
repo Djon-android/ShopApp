@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shopapp.R
+import com.example.shopapp.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditiningFinishedListener{
@@ -18,24 +19,20 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditiningFinishedLi
     }
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var binding: ActivityMainBinding
     private lateinit var adapterShopList: ShopListAdapter
     private var shopItemContainer: FragmentContainerView? = null
 
-    private lateinit var buttonAddItem: FloatingActionButton
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        shopItemContainer = findViewById(R.id.shop_item_container)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setupRecyclerView()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewModel.shopListLD.observe(this) {
             adapterShopList.submitList(it)
         }
-        buttonAddItem = findViewById(R.id.button_add_shop_item)
-        buttonAddItem.setOnClickListener {
+        binding.buttonAddShopItem.setOnClickListener {
             if (!isOnePaneMode()) {
                 launchFragment(ShopItemFragment.newInstanceAddItem())
             } else {

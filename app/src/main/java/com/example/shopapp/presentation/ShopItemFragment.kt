@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.shopapp.R
+import com.example.shopapp.databinding.FragmentShopItemBinding
 import com.example.shopapp.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
 
@@ -20,7 +21,7 @@ class ShopItemFragment : Fragment() {
 
     private lateinit var viewModel: ShopItemViewModel
     private lateinit var onEditiningFinishedListener: OnEditiningFinishedListener
-
+    private lateinit var binding: FragmentShopItemBinding
     private lateinit var tilName: TextInputLayout
     private lateinit var tilCount: TextInputLayout
     private lateinit var etName: EditText
@@ -50,14 +51,18 @@ class ShopItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_shop_item, container, false)
-        return view
+
+//        binding = inflater.inflate(R.layout.fragment_shop_item, container, false)
+        binding = FragmentShopItemBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
         initViews(view)
         addChangeTextListener()
         when (screenMode) {
